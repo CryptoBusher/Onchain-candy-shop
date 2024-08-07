@@ -132,3 +132,4 @@ dist
 *.log
 config.js
 package-lock.json
+wallets.txt
