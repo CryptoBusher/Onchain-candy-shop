@@ -49,19 +49,35 @@ export class Fuel {
 
         const gasLimit = estimatedGasLimit * BigInt(parseInt(this.#getGasLimitMultiplier() * 100)) / BigInt(100);
 
-        // const tx = await this.contract.deposit(
+        const tx = await this.contract.deposit(
+            tokensData.mainnet[currency].address,
+            amount,
+            0,
+            { value, gasLimit }
+        );
+
+        const receipt = await tx.wait();
+        return await receipt.hash;
+    }
+
+    async depositWithPermit(currency, amount) {
+        const estimatedGasLimit = await this.contract.deposit.depositWithPermit(
+            tokensData.mainnet[currency].address,
+            amount,
+            0,
+        );
+
+        // const gasLimit = estimatedGasLimit * BigInt(parseInt(this.#getGasLimitMultiplier() * 100)) / BigInt(100);
+
+        // const tx = await this.contract.depositWithPermit(
         //     tokensData.mainnet[currency].address,
         //     amount,
         //     0,
-        //     { value, gasLimit }
+        //     { gasLimit }
         // );
 
         // const receipt = await tx.wait();
         // return await receipt.hash;
-    }
-
-    async depositWithPermit(currency) {
-
     }
 
     async getDepositedAmount(currency) {
