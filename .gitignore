@@ -133,3 +133,6 @@ dist
 config.js
 package-lock.json
 wallets.txt
+
+*SECRET*
+*secret*

@@ -5,7 +5,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node depositFuel.js",
+    "foreverstart": ""
   },
   "repository": {
     "type": "git",
@@ -22,6 +23,7 @@
     "ethers": "^6.10.0",
     "forever": "^4.0.3",
     "node-fetch": "^3.3.2",
-    "winston": "^3.11.0"
+    "winston": "^3.11.0",
+    "https-proxy-agent": "^7.0.2"
   }
 }

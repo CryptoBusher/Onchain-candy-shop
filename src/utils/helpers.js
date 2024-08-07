@@ -1,8 +1,6 @@
 import fs from "fs";
 
 import fetch from "node-fetch";
-import { HttpsProxyAgent } from "https-proxy-agent";
-import { ethers, JsonRpcProvider, FetchRequest } from "ethers";
 
 import { logger } from './../logger/logger.js';
 
@@ -38,12 +36,6 @@ export const randFloat = (min, max) => {
 
 export const randInt = (min, max) => {
 	return Math.floor(Math.random() * (max - min + 1) + min);
-};
-
-export const roundToAppropriateDecimalPlace = (value, minDec, maxDec) => {
-	const decAmount = randInt(minDec, maxDec);
-	const decimalPlaces = Math.max(0, -Math.floor(Math.log10(Math.abs(value))) + decAmount);
-	return value.toFixed(decimalPlaces);
 };
 
 export const txtToArray = (filePath) => {
@@ -92,17 +84,22 @@ export const changeProxyIp = async (link, delay) => {
     throw new Error(`Failed to change proxy IP`);
 };
 
-export const generateProviderAndSigner = (privateKey, rpc, proxy=undefined) => {
-    let fetchRequest = undefined;
-    if (proxy) {
-        fetchRequest = new FetchRequest(rpc);
-        fetchRequest.getUrlFunc = FetchRequest.createGetUrlFunc({
-			agent: new HttpsProxyAgent(proxy),
-		});
-    };
+export const roundBigInt = (num, minFig, maxFig) => {
+    const sigFigs = randInt(minFig, maxFig);
 
-    const provider = new JsonRpcProvider(fetchRequest ? fetchRequest : rpc);
-    const signer = new ethers.Wallet(privateKey, provider);
+    if (num === 0n) {
+        return 0n;
+    }
 
-    return [provider, signer];
-};
+    const numStr = num.toString();
+    const length = numStr.length;
+
+    if (length <= sigFigs) {
+        return num;
+    }
+
+    const scale = BigInt(10 ** (length - sigFigs));
+    const rounded = (num / scale) * scale;
+
+    return rounded;
+}
