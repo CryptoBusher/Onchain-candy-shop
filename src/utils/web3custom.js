@@ -35,3 +35,12 @@ export const getTokenBalance = async (walletAddress, tokenAddress, provider) => 
 	return await tokenContract.balanceOf(walletAddress);
 };
 
+
+export const getTokenContractNonce = async (tokenAddress, ownerAddress, provider) => {
+	const standardTokenAbi = JSON.parse(fs.readFileSync('./src/abi/standardToken.json', "utf8"));
+	const tokenContract = new ethers.Contract(tokenAddress, standardTokenAbi, provider);
+	const nonce = await tokenContract.nonces(ownerAddress);
+
+	return nonce;
+};
+

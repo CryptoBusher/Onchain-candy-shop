@@ -78,7 +78,7 @@ class Runner {
         return signer;
     };
 
-    async fuelDepoit(signer) {
+    async fuelDepoit(name, signer) {
         const getAmount = async (currency) => {
             let walletBalance;
             if (currency === 'ETH') {
@@ -125,13 +125,13 @@ class Runner {
         const amount = await getAmount(currency);
         console.log(amount)
 
-        // logger.info(`${name} - trying to deposit ${fromWei('mainnet', currency, amount)} ${currency}`);
-        // const hash = await fuel.performDeposit(currency, amount);
+        logger.info(`${name} - trying to deposit ${fromWei('mainnet', currency, amount)} ${currency}`);
+        const hash = await fuel.performDeposit(currency, amount);
 
-        // return {
-        //     info: `Deposited ${amount} ${currency}`,
-        //     hash: hash
-        // }
+        return {
+            info: `Deposited ${amount} ${currency}`,
+            hash: hash
+        }
     }
 
 
@@ -165,7 +165,7 @@ class Runner {
                     }
 
                     const signer = this.#prepareSigner(privateKey, proxy);
-                    const result = await this.activity(signer);
+                    const result = await this.activity(name, signer);
                     logger.info(`${name} - success, hash: ${result.hash}`);
                     this.#processSuccess(walletData);
 
