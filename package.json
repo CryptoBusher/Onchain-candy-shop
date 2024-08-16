@@ -1,6 +1,6 @@
 {
   "type": "module",
-  "name": "fuel-deposit",
+  "name": "onchain-candies-shop",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -10,14 +10,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/CryptoBusher/Fuel-deposit.git"
+    "url": "git+https://github.com/CryptoBusher/Onchain-candies-shop.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/CryptoBusher/Fuel-deposit/issues"
+    "url": "https://github.com/CryptoBusher/Onchain-candies-shop/issues"
   },
-  "homepage": "https://github.com/CryptoBusher/Fuel-deposit#readme",
+  "homepage": "https://github.com/CryptoBusher/Onchain-candies-shop#readme",
   "dependencies": {
     "dotenv": "^16.4.1",
     "ethers": "^6.10.0",
