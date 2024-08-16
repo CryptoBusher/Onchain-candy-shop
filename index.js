@@ -116,14 +116,12 @@ class Runner {
 
         if (this.config.fuelDepoit.singleDeposit) {
             const depositedAmount = await fuel.getDepositedAmount(currency);
-            console.log(depositedAmount)
             if (depositedAmount > 0n) {
                 throw new ActivityAlreadyPerformedError(`already deposited ${fromWei('mainnet', currency, depositedAmount)} ${currency}`);
             }
         }
 
         const amount = await getAmount(currency);
-        console.log(amount)
 
         logger.info(`${name} - trying to deposit ${fromWei('mainnet', currency, amount)} ${currency}`);
         const hash = await fuel.performDeposit(currency, amount);
