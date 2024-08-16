@@ -1,3 +1,5 @@
+// https://app.fuel.network/earn-points/deposit/
+
 import fs from "fs";
 
 import { ethers, AbiCoder, Signature, MaxUint256 } from "ethers";

@@ -1,5 +1,3 @@
-// https://app.fuel.network/earn-points/deposit/
-
 import fs from "fs";
 import path from "path";
 
