@@ -5,7 +5,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "forever start -o out.log -e err.log index.js",
     "foreverstart": ""
   },
   "repository": {
