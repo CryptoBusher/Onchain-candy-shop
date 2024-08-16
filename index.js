@@ -29,9 +29,14 @@ class LowBalanceError extends Error {
 }
 
 class Runner {
+    static activityChainsMap = {
+        fuelDepoit: 'mainnet'
+    }
+
     constructor(config) {
         this.config = config;
         this.activity =  this[this.config.activity];
+        this.chain = Runner.activityChainsMap[this.config.activity];
     }
 
     #processSuccess(walletData) {
@@ -61,16 +66,16 @@ class Runner {
         return randomChoice(walletsData);
     };
 
-    #prepareSigner(privateKey, proxy=undefined) {
+    #prepareSigner(privateKey, rpc, proxy=undefined) {
         let fetchRequest = undefined;
         if (proxy) {
-            fetchRequest = new FetchRequest(this.config.rpc);
+            fetchRequest = new FetchRequest(rpc);
             fetchRequest.getUrlFunc = FetchRequest.createGetUrlFunc({
                 agent: new HttpsProxyAgent(proxy),
             });
         };
 
-        const provider = new JsonRpcProvider(fetchRequest ? fetchRequest : this.config.rpc);
+        const provider = new JsonRpcProvider(fetchRequest ? fetchRequest : rpc);
         const signer = new ethers.Wallet(privateKey, provider);
 
         return signer;
@@ -160,7 +165,7 @@ class Runner {
                         }
                     }
 
-                    const signer = this.#prepareSigner(privateKey, proxy);
+                    const signer = this.#prepareSigner(privateKey, config.rpcs[this.chain], proxy);
 
                     logger.info(`Waiting for gas...`);
                     await waitForGas(signer.provider, config.gasPrices);

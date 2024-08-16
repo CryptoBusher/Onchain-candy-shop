@@ -2,7 +2,9 @@ import 'dotenv/config';
 
 
 export const config = {
-    rpc: process.env.MAINNET_RPC,                               // Нода, подтягивается из .env файла
+    rpcs: {                                                     // Ноды
+        mainnet: ""
+    },
 
     generalProxy: {
         address: process.env.GENERAL_PROXY_ADDRESS,             // Прокси, подтягивается из .env файла
