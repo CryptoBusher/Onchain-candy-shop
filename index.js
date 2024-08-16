@@ -10,7 +10,7 @@ import { Fuel } from './src/modules/fuel.js';
 import { HttpsProxyAgent } from "https-proxy-agent";
 import { ethers, JsonRpcProvider, FetchRequest } from "ethers";
 import { txtToArray, addLineToTxt, randomChoice, sleep, randInt, removeLineFromTxt, changeProxyIp, randFloat, roundBigInt } from './src/utils/helpers.js'
-import { toWei, fromWei, getTokenBalance, getEthBalance } from "./src/utils/web3custom.js";
+import { toWei, fromWei, getTokenBalance, getEthBalance, waitForGas } from "./src/utils/web3custom.js";
 import { tokensData } from "./src/utils/constants.js";
 
 const tgBot = config.telegramData.botToken ? new TelegramBot(config.telegramData.botToken, config.telegramData.chatId) : undefined;
@@ -163,6 +163,11 @@ class Runner {
                     }
 
                     const signer = this.#prepareSigner(privateKey, proxy);
+
+                    logger.info(`Waiting for gas...`);
+                    await waitForGas(signer.provider, config.gasPrices);
+                    logger.info(`gas ok, proceeding`);
+
                     const result = await this.activity(name, signer);
                     logger.info(`${name} - success, hash: ${result.hash}`);
                     this.#processSuccess(walletData);
