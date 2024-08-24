@@ -10,7 +10,7 @@ export const config = {
     generalProxy: {
         address: process.env.GENERAL_PROXY_ADDRESS,             // Прокси, подтягивается из .env файла
         link: process.env.GENERAL_PROXY_LINK,                   // Ссылка на смену IP, подтягивается из .env файла
-        sleepTimeSec: 15                                        // Время ожидания после запроса на смену IP (ответ может быть положительным сразу, но прокси еще не будет готов)
+        sleepTimeSec: 15                                        // Время ожидания после запроса на смену IP в секундах (ответ может быть положительным сразу, но прокси еще не будет готов)
     },
 
     telegramData: {	
@@ -24,7 +24,7 @@ export const config = {
     activityDelaysSec: [10, 20],                                // Задержка между действиями в рамках аккаунта в секундах (min, max)
     gasPriceMultiplierRange: [1.5, 1.8],                        // Увеличиваем gasPrice (min, max)
     gasLimitMultiplierRange: [1.3, 1.6],                        // Увеличиваем gasLimit (min, max)
-    activity: 'scrollCanvas',                                   // fuelDepoit, fuelBalanceCheck, scrollCanvas
+    activity: 'scrollCanvas',                                   // Выбираем активность, доступные: fuelDepoit, fuelBalanceCheck, scrollCanvas
 
     gasPrices: {
         waitForGas: true,                                       // Ожидать ли указанный газ (true / false)
