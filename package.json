@@ -24,6 +24,8 @@
     "forever": "^4.0.3",
     "node-fetch": "^3.3.2",
     "winston": "^3.11.0",
-    "https-proxy-agent": "^7.0.2"
+    "https-proxy-agent": "^7.0.2",
+    "header-generator": "^2.1.45",
+    "@faker-js/faker": "^8.4.1"
   }
 }

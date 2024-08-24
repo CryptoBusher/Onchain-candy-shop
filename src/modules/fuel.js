@@ -14,16 +14,36 @@ import { NotImplementedError } from "../errors.js";
 export class Fuel {
     static ADDRESS = "0x19b5cc75846BF6286d599ec116536a333C4C2c14";
     static ABI = JSON.parse(fs.readFileSync('./src/abi/fuel.json', "utf8"));
+    static SUPPORTED_TOKENS = [
+        'ETH',
+        'USDC',
+        'USDT'
+    ]
     static DOMAINS_CACHE = {};
     
-    constructor(signer, gasMultipliers) {
+    constructor(signer, gasPriceMultiplierRange, gasLimitMultiplierRange) {
         this.signer = signer;
-        this.gasMultipliers = gasMultipliers;
+        this.gasPriceMultiplierRange = gasPriceMultiplierRange;
+        this.gasLimitMultiplierRange = gasLimitMultiplierRange;
         this.contract = new ethers.Contract(Fuel.ADDRESS, Fuel.ABI, this.signer);
     }
 
+    #getGasPriceMultiplier() {
+        return randFloat(...this.gasPriceMultiplierRange);
+    }
+
     #getGasLimitMultiplier() {
-        return randFloat(...this.gasMultipliers);
+        return randFloat(...this.gasLimitMultiplierRange);
+    }
+
+    async performDeposit(coin, amount) {
+        if (coin == 'ETH') {
+            return await this.#deposit(coin, amount);
+        } else if (Fuel.SUPPORTED_TOKENS.includes(coin)) {
+            return await this.#depositWithPermit(coin, amount);
+        } else {
+            throw new NotImplementedError(`${coin} deposits are not implemented`);
+        }
     }
 
     async #deposit(coin, amount) {
@@ -131,16 +151,6 @@ export class Fuel {
 
         Fuel.DOMAINS_CACHE[coin] = domain;
         return domain;
-    }
-
-    async performDeposit(coin, amount) {
-        if (coin == 'ETH') {
-            return await this.#deposit(coin, amount);
-        } else if (["USDT", "USDC"].includes(coin)) {
-            return await this.#depositWithPermit(coin, amount);
-        } else {
-            throw new NotImplementedError(`${coin} deposits are not implemented`);
-        }
     }
 
     async getDepositedAmount(coin) {

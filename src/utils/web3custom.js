@@ -1,6 +1,6 @@
 import fs from 'fs';
 
-import { ethers, parseEther, formatEther, parseUnits, formatUnits } from "ethers";
+import { ethers, parseEther, formatEther, parseUnits, formatUnits, JsonRpcProvider } from "ethers";
 
 import { tokensData } from './constants.js';
 import { sleep, randInt } from './helpers.js'
@@ -49,7 +49,8 @@ export const getTokenContractNonce = async (tokenAddress, ownerAddress, provider
 };
 
 
-export const waitForGas = async (provider, gasPrices) => {
+export const waitForGas = async (rpc, gasPrices) => {
+	const provider = new JsonRpcProvider(rpc);
     let currentMaxGas = gasPrices.startGwei;
 
     const timestampShift = gasPrices.delayMinutes * 60 * 1000 // minutes to miliseconds

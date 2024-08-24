@@ -17,3 +17,8 @@ export const tokensData = {
         }
     }
 }
+
+export const chainExplorers = {
+    'mainnet': 'https://etherscan.io/',
+    'scroll': 'https://scrollscan.com/'
+}

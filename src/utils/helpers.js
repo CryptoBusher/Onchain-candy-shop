@@ -1,6 +1,8 @@
 import fs from "fs";
 
 import fetch from "node-fetch";
+import { HeaderGenerator } from 'header-generator';
+import { faker } from '@faker-js/faker'
 
 import { logger } from './../logger/logger.js';
 
@@ -12,6 +14,21 @@ export const sleep = (sec) => {
 export const randomChoice = (arr) => {
 	const randomIndex = Math.floor(Math.random() * arr.length);
 	return arr[randomIndex];
+};
+
+export const getRandomSample = (array, sampleSize) => {
+    if (sampleSize > array.length) {
+        throw new Error("Sample size must be less than or equal to the array length");
+    }
+
+    const arrayCopy = array.slice();
+
+    for (let i = arrayCopy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arrayCopy[i], arrayCopy[j]] = [arrayCopy[j], arrayCopy[i]];
+    }
+
+    return arrayCopy.slice(0, sampleSize);
 };
 
 export const weightedRandomChoice = (options) => {
@@ -50,9 +67,13 @@ export const removeLineFromTxt = (filePath, lineToRemoveText) => {
 	fs.writeFileSync(filePath, updatedContent, 'utf8');
 };
 
-export const addLineToTxt = (filePath, lineToAdd) => {
-    const allLines = txtToArray(filePath);
+export const addLineToTxt = (filePath, lineToAdd, allowDuplicates=true) => {
+    let allLines = txtToArray(filePath);
 	allLines.push(lineToAdd);
+
+    if (!allowDuplicates) {
+        allLines = [...new Set(allLines)];
+    }
 
 	const updatedContent = allLines.join('\n');
 	fs.writeFileSync(filePath, updatedContent, 'utf8');
@@ -102,4 +123,34 @@ export const roundBigInt = (num, minFig, maxFig) => {
     const rounded = (num / scale) * scale;
 
     return rounded;
-}
+};
+
+export const generateUaHeaders = () => {
+    const headerGenerator = new HeaderGenerator();
+
+    while (true) {
+        const headers = headerGenerator.getHeaders();
+        const { 'sec-ch-ua': secChUa, 'user-agent': userAgent, 'sec-ch-ua-platform': platform } = headers;
+
+        if (secChUa && userAgent && platform) {
+            return {
+                secChUa,
+                userAgent,
+                platform
+            }
+        }
+    }
+};
+
+export const generateRandomUsername = () => {
+    while (true) {
+        let username = faker.internet.userName();
+        if (username.includes('.')) {
+            username = randomChoice(username.split('.'))
+        }
+
+        if (username.length > 5) {
+            return username;
+        }
+    }
+};

@@ -9,8 +9,11 @@
 
 ## 💎 Модули
 - [x] fuelDepoit - депозитит ETH / USDC / USDT в [Fuel](https://app.fuel.network/earn-points/deposit/) в мейннете
+- [x] fuelBalanceCheck - проверяет депозиты ETH / USDC / USDT в [Fuel](https://app.fuel.network/earn-points/deposit/) в мейннете (просто отбивает в консольке результаты)
+- [x] scrollCanvas - (минтит профиль по рефке и без, сохраняет новую рефку, проверяет заминченные и незаминченные бейджи, минтит бейджи)
 
 ## ⌛️ На очереди
+- [ ] refactoring (move subrunners to separate file, hadnle chains detection)
 - [ ] fuelWithdraw
 
 ## 🤔 Преимущества
