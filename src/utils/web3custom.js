@@ -76,3 +76,14 @@ export const waitForGas = async (rpc, gasPrices) => {
     }
 };
 
+
+export const getReceiptWithTimeout = async (tx, timeoutSec) => {
+	const receipt = await Promise.race([
+		tx.wait(),
+		new Promise((_, reject) =>
+			setTimeout(() => reject(new Error("transaction receipt wait timeout")), timeoutSec * 1000)
+		)
+	]);
+	return receipt.hash;
+};
+

@@ -212,7 +212,7 @@ class Runner {
             }
         }
 
-        async function scrollCanvasMintBadges(userMax, badgesToSkip, activityDelaysSec) {      
+        async function scrollCanvasMintBadges(userMax, badgesToSkip, continueOnBadgeMintFail, activityDelaysSec) {      
             logger.info(`${name} - minting badges`);
 
             try {
@@ -245,13 +245,17 @@ class Runner {
                                 hash: null
                             })
                         } else {
-                            const info = `failed to mint badge ${badge.name} with CA ${badge.badgeContract}, see bot logs`;
-                            logger.error(`${name} - failed to mint badge ${badge.name} with CA ${badge.badgeContract}, reason: ${e.message}`);
-
-                            reportData.push({
-                                info,
-                                hash: null
-                            })
+                            if (continueOnBadgeMintFail) {
+                                const info = `failed to mint badge ${badge.name} with CA ${badge.badgeContract}, see bot logs`;
+                                logger.error(`${name} - failed to mint badge ${badge.name} with CA ${badge.badgeContract}, reason: ${e.message}`);
+    
+                                reportData.push({
+                                    info,
+                                    hash: null
+                                })
+                            } else {
+                                throw e;
+                            }
                         }
                     }
     
@@ -288,6 +292,7 @@ class Runner {
         await scrollCanvasMintBadges(
             randInt(...this.config.scrollCanvas.maxBadgesAmount),
             this.config.scrollCanvas.badgesToSkip,
+            this.config.scrollCanvas.continueOnBadgeMintFail,
             this.config.activityDelaysSec
         );
 

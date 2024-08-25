@@ -9,6 +9,7 @@ import fetch from "node-fetch";
 import { logger } from "../logger/logger.js";
 import { randFloat, randInt, generateUaHeaders, generateRandomUsername, sleep, getRandomSample } from '../utils/helpers.js'
 import { AlreadyDoneError } from "../errors.js";
+import { getReceiptWithTimeout } from "../utils/web3custom.js";
 import { count } from "console";
 
 
@@ -100,8 +101,7 @@ export class ScrollCanvas {
         );
         logger.debug(`tx: ${JSON.stringify(tx)}`);
 
-        const receipt = await tx.wait();
-        return [ await receipt.hash, username];
+        return [ await getReceiptWithTimeout(tx, 300), username];
     }
 
     async #getProfileMintSignature(refCode) {
@@ -471,12 +471,11 @@ export class ScrollCanvas {
         const gasLimit = estimatedGasLimit * BigInt(parseInt(this.#getGasLimitMultiplier() * 100)) / BigInt(100);
         badgeData.txData.gasLimit = gasLimit;
         logger.debug(`gasLimit: ${gasLimit}`);
-
+        
         const tx = await this.signer.sendTransaction(badgeData.txData);
-        logger.debug*`tx: ${JSON.stringify(tx)}`;
+        logger.debug(`tx: ${JSON.stringify(tx)}`);
 
-        const receipt = await tx.wait();
-        return await receipt.hash;
+        return await getReceiptWithTimeout(tx, 300);
     }
 
     async getPersonalRefCode() {

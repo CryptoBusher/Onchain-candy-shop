@@ -55,6 +55,7 @@ export const config = {
     scrollCanvas: {
         addNewRefCodes: false,                                  // Парсить ли рефки новорегов и добавлять в текстовик для использования (true / false)
         maxBadgesAmount: [2, 4],                                // Лимит баджей на аккаунт с учетом ранее сминченных баджей (min, max)
+        continueOnBadgeMintFail: false,                         // Продолжать ли минтить баджи, если какой - то зафейлился (при true - кошелек попадет в success даже если будут фейлы при минтах баджей), (true / false)
         badgesToSkip: [                                         // Какие баджи скипать, я указал те, которые минтятся не как все и мне было лень с ними ебаться
             '0x2dBce60ebeAafb77e5472308f432F78aC3AE07d9',       // Scroll Origins NFT (unique)
             '0x97e02Bc54a98f48B7858357030dAb2f22f701c3B',       // RubyScore ranking on Scroll (unique)
