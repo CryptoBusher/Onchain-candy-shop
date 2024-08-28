@@ -54,6 +54,21 @@ export class ScrollCanvas {
         return randFloat(...this.gasLimitMultiplierRange);
     }
 
+    async #getaveragePriorityFeeWwei(blocksCount) {
+        // Because feeData is laggy, showing "maxPriorityFeePerGas":"2" very often for Scroll and tx gets stucked
+        const percentiles = [25];
+        let totalPriorityFee = BigInt(0);
+
+        const feeHistory = await this.signer.provider.send("eth_feeHistory", [blocksCount, "latest", percentiles]);
+
+        for (let i = 0; i < blocksCount; i++) {
+            totalPriorityFee += BigInt(feeHistory.reward[i][0]);
+        }
+
+        let averagePriorityFeeWei = totalPriorityFee / BigInt(blocksCount);
+        return averagePriorityFeeWei;
+    }
+
     async mintProfile(username=undefined, refCode=undefined) {
         if (await this.#isProfileMinted()) {
             throw new AlreadyDoneError(`wallet ${this.signer.address} has already minted canvas profile`);
@@ -81,14 +96,16 @@ export class ScrollCanvas {
         const feeData = await this.signer.provider.getFeeData();
         logger.debug(`feeData: ${JSON.stringify(feeData)}`);
 
-        const estimatedGasPrice = feeData.gasPrice;
-        const gasPrice = estimatedGasPrice * BigInt(parseInt(this.#getGasPriceMultiplier() * 100)) / BigInt(100);
-        logger.debug(`gasPrice: ${gasPrice}`);
+        const maxFeePerGas = feeData.maxFeePerGas * BigInt(parseInt(this.#getGasPriceMultiplier() * 100)) / BigInt(100);
+        let maxPriorityFeePerGas = await this.#getaveragePriorityFeeWwei(50) * BigInt(parseInt(this.#getGasPriceMultiplier() * 100)) / BigInt(100);
+
+        logger.debug(`maxFeePerGas: ${maxFeePerGas}`);
+        logger.debug(`maxPriorityFeePerGas: ${maxPriorityFeePerGas}`);
 
         const estimatedGasLimit = await this.contract.mint.estimateGas(
             username,
             signature,
-            { value, gasPrice }
+            { value, maxFeePerGas, maxPriorityFeePerGas }
         );
 
         const gasLimit = estimatedGasLimit * BigInt(parseInt(this.#getGasLimitMultiplier() * 100)) / BigInt(100);
@@ -97,7 +114,7 @@ export class ScrollCanvas {
         const tx = await this.contract.mint(
             username,
             signature,
-            { value, gasPrice, gasLimit }
+            { value, maxFeePerGas, maxPriorityFeePerGas, gasLimit }
         );
         logger.debug(`tx: ${JSON.stringify(tx)}`);
 
@@ -380,12 +397,8 @@ export class ScrollCanvas {
             }
 
             const data = await response.json();
-
-            if (!('code' in data)) {
-                throw new Error(`server response: ${JSON.stringify(data)}`);
-            }
             
-            return Boolean(data.code);
+            return data.eligibility ?? false;
         } else if (badgeData.eligibilityCheck === false) {
             return true;  // only one nft has such data and it looks like it is mintable from any account
         } else {
@@ -462,10 +475,14 @@ export class ScrollCanvas {
         const feeData = await this.signer.provider.getFeeData();
         logger.debug(`feeData: ${JSON.stringify(feeData)}`);
 
-        const estimatedGasPrice = feeData.gasPrice;
-        const gasPrice = estimatedGasPrice * BigInt(parseInt(this.#getGasPriceMultiplier() * 100)) / BigInt(100);
-        badgeData.txData.gasPrice = gasPrice;
-        logger.debug(`gasPrice: ${gasPrice}`);
+        const maxFeePerGas = feeData.maxFeePerGas * BigInt(parseInt(this.#getGasPriceMultiplier() * 100)) / BigInt(100);
+        let maxPriorityFeePerGas = await this.#getaveragePriorityFeeWwei(50) * BigInt(parseInt(this.#getGasPriceMultiplier() * 100)) / BigInt(100);
+
+        badgeData.txData.maxFeePerGas = maxFeePerGas;
+        badgeData.txData.maxPriorityFeePerGas = maxPriorityFeePerGas;
+
+        logger.debug(`maxFeePerGas: ${maxFeePerGas}`);
+        logger.debug(`maxPriorityFeePerGas: ${maxPriorityFeePerGas}`);
 
         const estimatedGasLimit = await this.signer.estimateGas(badgeData.txData);
         const gasLimit = estimatedGasLimit * BigInt(parseInt(this.#getGasLimitMultiplier() * 100)) / BigInt(100);
