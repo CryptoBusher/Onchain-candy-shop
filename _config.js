@@ -37,7 +37,7 @@ export const config = {
     //------------------//
     //--MODULES CONFIG--//
     //------------------//
-
+    
     fuelDepoit: {
         currency: 'ETH',                                        // ETH, USDC, USDT
         untouchableAmount: [0.001, 0.003],                      // Неприкасаемая сумма (min, max)
@@ -57,14 +57,14 @@ export const config = {
         maxBadgesAmount: [2, 4],                                // Лимит баджей на аккаунт с учетом ранее сминченных баджей (min, max)
         continueOnBadgeMintFail: false,                         // Продолжать ли минтить баджи, если какой - то зафейлился (при true - кошелек попадет в success даже если будут фейлы при минтах баджей), (true / false)
         badgesToSkip: [                                         // Какие баджи скипать, я указал те, которые минтятся не как все и мне было лень с ними ебаться
-            '0x2dBce60ebeAafb77e5472308f432F78aC3AE07d9', // Scroll Origins NFT (unique)
-            '0x97e02Bc54a98f48B7858357030dAb2f22f701c3B', // RubyScore ranking on Scroll (unique)
-            '0x218e736Cc77c1339e42Ac6829ae93AC3CEA65b7a', // Conft 2024 Badge (unique)
-            '0x450Efa43661F5D669c35Ed62e18Bed4D6E826508', // Conft Scroll Box (unique)
-            '0x20475183625aE0eD5Dcd2553a660B06FF52af8Bd', // Scroll on Highlight (buggy)
-            '0x3A103fA688136340A841105e28C2Adf784332AE5', // Scroll Sloth Badge (unique)
-            '0xb6d09E38e18644110d241619d67B7226cDE2d650', // Varonve Minter (unique)
-            '0x428C923BF6a70AE3B62a22cdE9E56Ec13A94DF54', // Varonve Holder (unique)
+            '0x2dBce60ebeAafb77e5472308f432F78aC3AE07d9',       // Scroll Origins NFT (unique)
+            '0x97e02Bc54a98f48B7858357030dAb2f22f701c3B',       // RubyScore ranking on Scroll (unique)
+            '0x218e736Cc77c1339e42Ac6829ae93AC3CEA65b7a',       // Conft 2024 Badge (unique)
+            '0x450Efa43661F5D669c35Ed62e18Bed4D6E826508',       // Conft Scroll Box (unique)
+            '0x20475183625aE0eD5Dcd2553a660B06FF52af8Bd',       // Scroll on Highlight (buggy)
+            '0x3A103fA688136340A841105e28C2Adf784332AE5',       // Scroll Sloth Badge (unique)
+            '0xb6d09E38e18644110d241619d67B7226cDE2d650',       // Varonve Minter (unique)
+            '0x428C923BF6a70AE3B62a22cdE9E56Ec13A94DF54',       // Varonve Holder (unique)
         ]
     },
 }
